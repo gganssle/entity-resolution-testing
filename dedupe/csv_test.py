@@ -19,7 +19,6 @@ def preProcess(column):
     column = re.sub('  +', ' ', column)
     column = re.sub('\n', ' ', column)
     column = column.strip().strip('"').strip("'").lower().strip()
-    # If data is missing, indicate that by setting the value to `None`
     if not column:
         column = None
     return column
@@ -55,12 +54,17 @@ threshold = deduper.threshold(data_d, recall_weight=2)
 print('clustering...')
 clustered_dupes = deduper.match(data_d, threshold)
 
-print('# duplicate sets', len(clustered_dupes))
+new_dupes = []
+for i in range(len(clustered_dupes)):
+    if type(clustered_dupes[i][1]) == numpy.ndarray:
+        new_dupes.append((clustered_dupes[i][0], tuple(clustered_dupes[i][1])))
+    else:
+        new_dupes.append(clustered_dupes[i])
 
 cluster_membership = collections.defaultdict(lambda : 'x')
 
-for (cluster_id, cluster) in enumerate(clustered_dupes):
-    print(cluster_id, cluster)
+
+for (cluster_id, cluster) in enumerate(new_dupes):
     for record_id in cluster:
         cluster_membership[record_id] = cluster_id
 
@@ -71,7 +75,7 @@ with open(output_file, 'w') as f:
     with open(input_file) as f_input :
         reader = csv.reader(f_input)
 
-        heading_row = reader.next()
+        heading_row = next(reader)
         heading_row.insert(0, 'Cluster ID')
         writer.writerow(heading_row)
 
