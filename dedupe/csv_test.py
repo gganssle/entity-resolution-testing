@@ -54,34 +54,25 @@ threshold = deduper.threshold(data_d, recall_weight=2)
 print('clustering...')
 clustered_dupes = deduper.match(data_d, threshold)
 
+print('# duplicate sets', len(clustered_dupes))
+
 new_dupes = []
 for i in range(len(clustered_dupes)):
     if type(clustered_dupes[i][1]) == numpy.ndarray:
         new_dupes.append((clustered_dupes[i][0], tuple(clustered_dupes[i][1])))
     else:
         new_dupes.append(clustered_dupes[i])
+        
+outkeys = list(data_d[0].keys())
+outkeys.insert(0, 'Cluster ID')
 
-cluster_membership = collections.defaultdict(lambda : 'x')
-
-
-for (cluster_id, cluster) in enumerate(new_dupes):
-    for record_id in cluster:
-        cluster_membership[record_id] = cluster_id
-
-output_file = 'output.csv'
-with open(output_file, 'w') as f:
+with open('output.csv', 'w') as f:
     writer = csv.writer(f)
-
-    with open(input_file) as f_input :
-        reader = csv.reader(f_input)
-
-        heading_row = next(reader)
-        heading_row.insert(0, 'Cluster ID')
-        writer.writerow(heading_row)
-
-        for row in reader:
-            row_id = int(row[0])
-            cluster_id = cluster_membership[row_id]
-            row.insert(0, cluster_id)
+    writer.writerow(outkeys)
+    for (j, val) in enumerate(new_dupes):
+        idx = 0
+        for i in new_dupes[j][0]:
+            row = list(data_d[new_dupes[j][0][idx]].values()) # data values
+            row.insert(0, j) # insert cluster number
             writer.writerow(row)
-
+            idx += 1
