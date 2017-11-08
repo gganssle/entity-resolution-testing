@@ -16,6 +16,10 @@ def evaluateDuplicates(found_dupes, true_dupes):
     print('recall')
     print(len(true_positives) / float(len(true_dupes)))
 
+    print('true positives: ', len(true_positives))
+    print('false positives:', len(false_positives))
+    print('total samples:', len(true_dupes))
+    print('total samples:', len(test_dupes))
 
 def dupePairs(filename, rowname) :
     dupe_d = collections.defaultdict(list)
