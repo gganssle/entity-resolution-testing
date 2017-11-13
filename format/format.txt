@@ -1,0 +1,21 @@
+const graph = {
+  nodes: [{
+    id: "8067",
+    image: "/assets/site.svg",
+    label: "Reno",
+    mass: 200,
+    raw: {SiteCity: "Reno", SiteTracker: 0, SiteZip: "11110", ID_OS: 8067},
+    size: 26,
+    type: "site"
+  },
+    {
+      id: "103084",
+      image: "/assets/site.svg",
+      label: "Boston",
+      mass: 200,
+      raw: {SiteCity: "Boston", SiteTracker: 0, SiteZip: "11110", ID_OS: 8067},
+      size: 10,
+      type: "site"
+    }, ],
+  edges: [{id: "1030847", from: "103084", to: "8067", type: "edge"}]
+}
